@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sonuwork9053-gif.github.io/hisaab-kit/sitemap.xml

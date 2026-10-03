@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hisaab Kit: GST, EMI, SIP, Age, Percentage Calculator, UPI QR and Image Compressor</title>
+<meta name="description" content="Free online GST calculator, loan EMI calculator, SIP calculator, age calculator, percentage calculator, UPI QR code generator and image compressor. Works on your phone, nothing is uploaded.">
+<link rel="canonical" href="https://sonuwork9053-gif.github.io/hisaab-kit/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hisaab Kit: GST, EMI, SIP, Age, Percentage Calculator, UPI QR and Image Compressor">
+<meta property="og:description" content="Free online GST calculator, loan EMI calculator, SIP calculator, age calculator, percentage calculator, UPI QR code generator and image compressor. Works on your phone, nothing is uploaded.">
+<meta property="og:url" content="https://sonuwork9053-gif.github.io/hisaab-kit/">
+<meta name="theme-color" content="#EDF2ED">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one counter with seven tools. Tool tabs on top; each tool has controls on the left and a bill-book slip on the right; stacks on phones. */
+:root{
+  --bg:#EDF2ED; --surface:#FAFCFA; --ink:#14233B; --muted:#586A78; --line:#C7D5CC;
+  --accent:#1F4FD8; --on-accent:#FFFFFF; --stamp:#B4235A; --chip:#E2EAE4;
+  --display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1715; --surface:#17221F; --ink:#E4ECE8; --muted:#93A39C; --line:#2C3B36;
+    --accent:#86A6FF; --on-accent:#0B1430; --stamp:#F07AA6; --chip:#1F2C28; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1715; --surface:#17221F; --ink:#E4ECE8; --muted:#93A39C; --line:#2C3B36;
+  --accent:#86A6FF; --on-accent:#0B1430; --stamp:#F07AA6; --chip:#1F2C28; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+a.copy{text-decoration:none;display:inline-block}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;padding-inline:16px;padding-block:24px 48px}
+.wrap{max-width:980px;margin-inline:auto;display:flex;flex-direction:column;gap:24px}
+header{display:flex;flex-direction:column;gap:14px}
+.brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.brand strong{font-family:var(--display);font-weight:700;font-size:1.5rem;letter-spacing:-0.02em}
+.brand span{color:var(--muted);font-size:.92rem}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tab{font-family:var(--body);font-weight:500;font-size:.93rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.panel{display:flex;flex-direction:column;gap:24px}
+.panel-head{display:flex;flex-direction:column;gap:4px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(1.7rem,5vw,2.5rem);line-height:1.05;margin:0;letter-spacing:-0.02em;text-wrap:balance}
+.panel-head p{margin:0;color:var(--muted);max-width:60ch}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:760px){.grid{grid-template-columns:minmax(0,1fr)}}
+.controls{display:flex;flex-direction:column;gap:20px;min-width:0}
+.field{display:flex;flex-direction:column;gap:8px;min-width:0}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.label{font-size:.75rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.amount{display:flex;align-items:center;gap:8px;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.amount span{font-family:var(--mono);font-size:1.5rem;color:var(--muted)}
+.amount input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font-family:var(--mono);font-weight:600;font-size:clamp(1.5rem,6vw,2.1rem);padding:2px 0;outline:none}
+.amount:focus-within{border-color:var(--accent)}
+.inp{width:100%;min-width:0;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-family:var(--mono);font-size:1rem;padding:10px 12px;border-radius:8px}
+textarea.inp{resize:vertical;min-height:88px;font-size:.92rem}
+.inp:focus{outline:2px solid var(--accent);outline-offset:1px}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:.95rem;border:1px solid var(--line);background:var(--chip);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--surface);color:var(--ink);font-family:var(--body);font-size:.95rem;font-weight:500;padding:11px 8px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:600}
+.custom{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:0 12px}
+.custom input{width:4.5ch;border:0;background:transparent;color:var(--ink);font-family:var(--mono);font-size:.95rem;padding:8px 0;outline:none}
+.custom span{font-family:var(--mono);color:var(--muted)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hint{font-size:.85rem;color:var(--muted);margin:0}
+.bill{background:var(--surface);border:1px solid var(--line);padding:22px 20px 20px;position:relative;min-width:0}
+.bill::before{content:"";position:absolute;left:0;right:0;top:-7px;height:8px;
+  background:radial-gradient(circle at 6px 8px,var(--bg) 4px,transparent 4.5px) 0 0/12px 8px repeat-x}
+.bill-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.bill-head strong{font-family:var(--display);font-size:1.1rem;letter-spacing:.02em}
+.bill-head span{font-family:var(--mono);font-size:.78rem;color:var(--muted);text-align:right}
+.line{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:0 12px;padding-block:7px;border-bottom:1px solid var(--line);font-size:.98rem}
+.line>span{white-space:nowrap}
+.line b{font-family:var(--mono);font-weight:400;font-variant-numeric:tabular-nums;margin-left:auto;text-align:right;overflow-wrap:anywhere;min-width:0}
+.line small{color:var(--muted);font-family:var(--mono);font-size:.8rem}
+.total{align-items:center;border-top:2px solid var(--ink);border-bottom:0;margin-top:-1px;padding-block:14px 6px}
+.total.first{border-top:0;margin-top:0;border-bottom:2px solid var(--ink);padding-block:14px}
+.total span{font-family:var(--display);font-weight:700;font-size:1.05rem}
+.total b{font-weight:600;font-size:clamp(1.3rem,5vw,1.75rem);color:var(--accent)}
+.words{font-size:.88rem;color:var(--muted);padding-top:6px;margin:0;overflow-wrap:anywhere}
+.words em{font-style:normal;color:var(--ink)}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:14px}
+.stamp{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--stamp);border:1.5px solid var(--stamp);padding:4px 9px;border-radius:4px;transform:rotate(-3deg)}
+.copy{border:1px solid var(--ink);background:transparent;color:var(--ink);font-family:var(--body);font-weight:600;font-size:.9rem;padding:9px 16px;border-radius:8px;cursor:pointer}
+.copy:hover{background:var(--ink);color:var(--bg)}
+.share{display:flex;height:14px;border:1px solid var(--line);margin-top:14px}
+.share i{display:block;background:var(--accent)}
+.share u{display:block;background:var(--stamp);flex:1}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.82rem;color:var(--muted);padding-top:8px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:6px;background:var(--accent)}
+.legend span+span::before{background:var(--stamp)}
+.big{font-family:var(--display);font-weight:700;font-size:clamp(1.35rem,5vw,1.8rem);line-height:1.2;color:var(--accent);padding-block:16px;border-bottom:2px solid var(--ink);overflow-wrap:anywhere}
+.qa{display:flex;flex-direction:column;gap:10px;padding-block:16px;border-bottom:1px solid var(--line)}
+.qa:first-child{padding-top:0}
+.qa .q{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.98rem}
+.qa .q input{width:8.5ch;flex:0 1 auto}
+.qa output{font-family:var(--mono);font-weight:600;font-size:1.15rem;color:var(--accent);overflow-wrap:anywhere}
+.pic{display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:18px}
+.pic img{max-width:100%;height:auto;border:1px solid var(--line);background:#fff}
+#q-img{width:240px;image-rendering:pixelated;padding:0}
+.empty{border:1.5px dashed var(--line);padding:36px 16px;text-align:center;color:var(--muted);margin-top:16px}
+.msg{color:var(--stamp);font-size:.9rem;margin:0}
+.payload{font-family:var(--mono);font-size:.76rem;color:var(--muted);overflow-wrap:anywhere;margin:0;text-align:center}
+input[type=range]{width:100%;accent-color:var(--accent)}
+input[type=file].inp{font-family:var(--body);font-size:.9rem}
+.notes{border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:.92rem;margin:0;max-width:75ch}
+.notes code{font-family:var(--mono);font-size:.85rem;color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><strong>Hisaab Kit</strong><span>Seven everyday calculators and tools. Nothing you type leaves your device.</span></div>
+    <nav class="tabs" id="tabs" aria-label="Tools">
+      <button type="button" class="tab" data-t="gst" aria-pressed="true">GST</button>
+      <button type="button" class="tab" data-t="emi" aria-pressed="false">Loan EMI</button>
+      <button type="button" class="tab" data-t="sip" aria-pressed="false">SIP</button>
+      <button type="button" class="tab" data-t="age" aria-pressed="false">Age</button>
+      <button type="button" class="tab" data-t="percent" aria-pressed="false">Percentage</button>
+      <button type="button" class="tab" data-t="qr" aria-pressed="false">QR code</button>
+      <button type="button" class="tab" data-t="image" aria-pressed="false">Image compressor</button>
+    </nav>
+  </header>
+
+  <!-- GST -->
+  <section class="panel" id="t-gst">
+    <div class="panel-head"><h1>GST Calculator</h1><p>Add GST to a price or take it out of an MRP, with the CGST, SGST and IGST split.</p></div>
+    <div class="grid">
+      <div class="controls">
+        <div class="field"><label class="label" for="g-amt">Amount</label>
+          <div class="amount"><span>₹</span><input id="g-amt" type="text" inputmode="decimal" autocomplete="off" value="10000"></div></div>
+        <div class="field"><span class="label">This amount is</span>
+          <div class="seg" id="g-mode"><button type="button" data-v="ex" aria-pressed="true">Before GST</button><button type="button" data-v="in" aria-pressed="false">GST included</button></div></div>
+        <div class="field"><span class="label">GST rate</span>
+          <div class="row" id="g-rates">
+            <button type="button" class="chip" data-r="0.25" aria-pressed="false">0.25%</button>
+            <button type="button" class="chip" data-r="3" aria-pressed="false">3%</button>
+            <button type="button" class="chip" data-r="5" aria-pressed="false">5%</button>
+            <button type="button" class="chip" data-r="18" aria-pressed="true">18%</button>
+            <button type="button" class="chip" data-r="40" aria-pressed="false">40%</button>
+            <label class="custom"><input id="g-custom" type="text" inputmode="decimal" placeholder="other" aria-label="Custom GST rate"><span>%</span></label>
+          </div>
+          <p class="hint">5% and 18% are the main slabs. 3% is gold and silver, 0.25% is rough diamonds, 40% is sin and luxury goods.</p></div>
+        <div class="field"><span class="label">Sale type</span>
+          <div class="seg" id="g-sale"><button type="button" data-v="intra" aria-pressed="true">Within state</button><button type="button" data-v="inter" aria-pressed="false">Other state</button></div></div>
+      </div>
+      <div class="bill" aria-live="polite">
+        <div class="bill-head"><strong>TAX BREAK-UP</strong><span id="g-tag"></span></div>
+        <div class="line"><span>Taxable value</span><b id="g-base"></b></div>
+        <div class="line" id="g-lc"><span>CGST <small id="g-h1"></small></span><b id="g-cgst"></b></div>
+        <div class="line" id="g-ls"><span>SGST <small id="g-h2"></small></span><b id="g-sgst"></b></div>
+        <div class="line" id="g-li" hidden><span>IGST <small id="g-fr"></small></span><b id="g-igst"></b></div>
+        <div class="line"><span>Total GST</span><b id="g-gst"></b></div>
+        <div class="line total"><span>Invoice total</span><b id="g-total"></b></div>
+        <p class="words">In words: <em id="g-words"></em></p>
+        <div class="foot"><span class="stamp">Computed, not a tax invoice</span><button type="button" class="copy" id="g-copy">Copy break-up</button></div>
+      </div>
+    </div>
+    <p class="notes">Adding GST: <code>GST = price × rate ÷ 100</code>. Removing GST from MRP: <code>taxable value = MRP ÷ (1 + rate ÷ 100)</code>. A sale within the state splits GST equally into CGST and SGST. A sale to another state charges the full rate as IGST.</p>
+  </section>
+
+  <!-- EMI -->
+  <section class="panel" id="t-emi" hidden>
+    <div class="panel-head"><h1>Loan EMI Calculator</h1><p>Monthly instalment, total interest and total repayment for a home, car or personal loan.</p></div>
+    <div class="grid">
+      <div class="controls">
+        <div class="field"><label class="label" for="e-p">Loan amount</label>
+          <div class="amount"><span>₹</span><input id="e-p" type="text" inputmode="decimal" autocomplete="off" value="500000"></div></div>
+        <div class="two">
+          <div class="field"><label class="label" for="e-r">Interest % per year</label><input class="inp" id="e-r" type="text" inputmode="decimal" value="9.5"></div>
+          <div class="field"><label class="label" for="e-n">Tenure</label><input class="inp" id="e-n" type="text" inputmode="decimal" value="5"></div>
+        </div>
+        <div class="field"><span class="label">Tenure is in</span>
+          <div class="seg" id="e-unit"><button type="button" data-v="y" aria-pressed="true">Years</button><button type="button" data-v="m" aria-pressed="false">Months</button></div></div>
+      </div>
+      <div class="bill" aria-live="polite">
+        <div class="bill-head"><strong>REPAYMENT</strong><span id="e-tag"></span></div>
+        <div class="line total first"><span>Monthly EMI</span><b id="e-emi"></b></div>
+        <div class="line"><span>Loan amount</span><b id="e-prin"></b></div>
+        <div class="line"><span>Total interest</span><b id="e-int"></b></div>
+        <div class="line"><span>Total you repay</span><b id="e-total"></b></div>
+        <div class="share" aria-hidden="true"><i id="e-bar"></i><u></u></div>
+        <div class="legend"><span id="e-lp"></span><span id="e-li"></span></div>
+      </div>
+    </div>
+    <p class="notes"><code>EMI = P × r × (1 + r)ⁿ ÷ ((1 + r)ⁿ − 1)</code>, where P is the loan, r is the monthly rate (yearly rate ÷ 12 ÷ 100) and n is the number of months. Figures are rounded to the nearest rupee. Your bank's EMI can differ slightly because of fees and its own rounding.</p>
+  </section>
+
+  <!-- SIP -->
+  <section class="panel" id="t-sip" hidden>
+    <div class="panel-head"><h1>SIP Calculator</h1><p>What a fixed monthly investment grows to at an assumed yearly return.</p></div>
+    <div class="grid">
+      <div class="controls">
+        <div class="field"><label class="label" for="s-amt">Monthly investment</label>
+          <div class="amount"><span>₹</span><input id="s-amt" type="text" inputmode="decimal" autocomplete="off" value="5000"></div></div>
+        <div class="two">
+          <div class="field"><label class="label" for="s-r">Expected return % per year</label><input class="inp" id="s-r" type="text" inputmode="decimal" value="12"></div>
+          <div class="field"><label class="label" for="s-y">Years</label><input class="inp" id="s-y" type="text" inputmode="decimal" value="10"></div>
+        </div>
+      </div>
+      <div class="bill" aria-live="polite">
+        <div class="bill-head"><strong>PROJECTION</strong><span id="s-tag"></span></div>
+        <div class="line total first"><span>Value at the end</span><b id="s-val"></b></div>
+        <div class="line"><span>You invest</span><b id="s-inv"></b></div>
+        <div class="line"><span>Estimated gain</span><b id="s-gain"></b></div>
+        <div class="share" aria-hidden="true"><i id="s-bar"></i><u></u></div>
+        <div class="legend"><span id="s-lp"></span><span id="s-li"></span></div>
+        <div class="foot"><span class="stamp">Estimate, returns are not fixed</span></div>
+      </div>
+    </div>
+    <p class="notes"><code>Value = P × ((1 + i)ⁿ − 1) ÷ i × (1 + i)</code>, where P is the monthly amount, i is the monthly return (yearly ÷ 12 ÷ 100) and n is the number of months. Market returns change every year, so treat the result as an estimate.</p>
+  </section>
+
+  <!-- AGE -->
+  <section class="panel" id="t-age" hidden>
+    <div class="panel-head"><h1>Age Calculator</h1><p>Exact age in years, months and days on any date. Useful for exam and job form cut-off dates.</p></div>
+    <div class="grid">
+      <div class="controls">
+        <div class="field"><label class="label" for="a-dob">Date of birth</label><input class="inp" id="a-dob" type="date" value="2000-01-15"></div>
+        <div class="field"><label class="label" for="a-on">Age as on</label><input class="inp" id="a-on" type="date"></div>
+        <p class="hint">The date of birth shown is an example. Change it to yours.</p>
+      </div>
+      <div class="bill" aria-live="polite">
+        <div class="bill-head"><strong>AGE</strong><span id="a-tag"></span></div>
+        <div class="big" id="a-age"></div>
+        <div class="line"><span>Total months</span><b id="a-months"></b></div>
+        <div class="line"><span>Total weeks</span><b id="a-weeks"></b></div>
+        <div class="line"><span>Total days</span><b id="a-days"></b></div>
+        <div class="line"><span>Born on a</span><b id="a-born"></b></div>
+        <div class="line"><span>Next birthday</span><b id="a-next"></b></div>
+      </div>
+    </div>
+    <p class="notes">Age is counted in completed years, then completed months, then the remaining days. That is the same method used for cut-off dates on government forms.</p>
+  </section>
+
+  <!-- PERCENT -->
+  <section class="panel" id="t-percent" hidden>
+    <div class="panel-head"><h1>Percentage Calculator</h1><p>Four common percentage sums. Change any number and the answer updates.</p></div>
+    <div class="bill">
+      <div class="qa"><div class="q">What is <input class="inp" id="p1a" type="text" inputmode="decimal" value="18" aria-label="Percent"> % of <input class="inp" id="p1b" type="text" inputmode="decimal" value="2500" aria-label="Number"> ?</div><output id="p1o"></output></div>
+      <div class="qa"><div class="q"><input class="inp" id="p2a" type="text" inputmode="decimal" value="45" aria-label="Part"> is what % of <input class="inp" id="p2b" type="text" inputmode="decimal" value="60" aria-label="Whole"> ?</div><output id="p2o"></output></div>
+      <div class="qa"><div class="q">Price ₹ <input class="inp" id="p3a" type="text" inputmode="decimal" value="1999" aria-label="Price"> with <input class="inp" id="p3b" type="text" inputmode="decimal" value="20" aria-label="Discount percent"> % off</div><output id="p3o"></output></div>
+      <div class="qa" style="border-bottom:0;padding-bottom:0"><div class="q">Change from <input class="inp" id="p4a" type="text" inputmode="decimal" value="80" aria-label="Old value"> to <input class="inp" id="p4b" type="text" inputmode="decimal" value="100" aria-label="New value"></div><output id="p4o"></output></div>
+    </div>
+    <p class="notes"><code>X% of Y = Y × X ÷ 100</code>. <code>X as a % of Y = X ÷ Y × 100</code>. <code>% change = (new − old) ÷ old × 100</code>.</p>
+  </section>
+
+  <!-- QR -->
+  <section class="panel" id="t-qr" hidden>
+    <div class="panel-head"><h1>QR Code Generator</h1><p>Make a UPI payment QR for your shop, or a QR for any link or text.</p></div>
+    <div class="grid">
+      <div class="controls">
+        <div class="field"><span class="label">QR for</span>
+          <div class="seg" id="q-mode"><button type="button" data-v="upi" aria-pressed="true">UPI payment</button><button type="button" data-v="text" aria-pressed="false">Link or text</button></div></div>
+        <div id="q-upi-f" class="controls">
+          <div class="field"><label class="label" for="q-upi">UPI ID</label><input class="inp" id="q-upi" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" value="yourshop@upi"></div>
+          <div class="field"><label class="label" for="q-name">Name shown to payer</label><input class="inp" id="q-name" type="text" autocomplete="off" value="Your Shop Name"></div>
+          <div class="two">
+            <div class="field"><label class="label" for="q-amt">Amount ₹ (optional)</label><input class="inp" id="q-amt" type="text" inputmode="decimal" value=""></div>
+            <div class="field"><label class="label" for="q-note">Note (optional)</label><input class="inp" id="q-note" type="text" value=""></div>
+          </div>
+          <p class="hint">The UPI ID and name shown are examples. Enter your own, then scan the QR once with your UPI app to confirm the name before you print it.</p>
+        </div>
+        <div id="q-text-f" class="field" hidden><label class="label" for="q-text">Link or text</label><textarea class="inp" id="q-text">https://example.com</textarea></div>
+      </div>
+      <div class="bill" aria-live="polite">
+        <div class="bill-head"><strong>YOUR QR</strong><span id="q-tag"></span></div>
+        <div class="pic">
+          <img id="q-img" alt="Generated QR code">
+          <p class="msg" id="q-msg" hidden></p>
+          <p class="payload" id="q-data"></p>
+          <a class="copy" id="q-dl" download="qr-code.png" href="#">Download QR</a>
+        </div>
+      </div>
+    </div>
+    <p class="notes">A UPI QR holds a payment link in the standard <code>upi://pay</code> format with your UPI ID, name and an optional amount. Any UPI app can scan it. Leave the amount empty to let the payer type it.</p>
+  </section>
+
+  <!-- IMAGE -->
+  <section class="panel" id="t-image" hidden>
+    <div class="panel-head"><h1>Image Compressor</h1><p>Shrink a photo to fit upload limits on exam, job and KYC forms. The photo stays on your device.</p></div>
+    <div class="grid">
+      <div class="controls">
+        <div class="field"><label class="label" for="i-file">Photo</label><input class="inp" id="i-file" type="file" accept="image/*"></div>
+        <div class="field"><label class="label" for="i-q">Quality <span id="i-qv"></span></label><input id="i-q" type="range" min="10" max="95" step="5" value="70"></div>
+        <div class="field"><label class="label" for="i-w">Maximum width</label>
+          <select class="inp" id="i-w"><option value="0">Keep original size</option><option value="1920">1920 px</option><option value="1280" selected>1280 px</option><option value="800">800 px</option><option value="400">400 px</option></select></div>
+      </div>
+      <div class="bill" aria-live="polite">
+        <div class="bill-head"><strong>COMPRESSED</strong><span id="i-tag">JPG</span></div>
+        <div class="empty" id="i-empty">Choose a photo to see its compressed size here.</div>
+        <p class="msg" id="i-msg" hidden></p>
+        <div id="i-res" hidden>
+          <div class="line"><span>Original</span><b id="i-orig"></b></div>
+          <div class="line"><span>Compressed</span><b id="i-new"></b></div>
+          <div class="line"><span>Size in pixels</span><b id="i-dim"></b></div>
+          <div class="line total"><span>Smaller by</span><b id="i-save"></b></div>
+          <div class="pic"><img id="i-img" alt="Compressed photo"><a class="copy" id="i-dl" download="compressed-photo.jpg" href="#">Download photo</a></div>
+        </div>
+      </div>
+    </div>
+    <p class="notes">The result is a JPG. Lower quality and a smaller width both reduce the file size. For a form that asks for under 100 KB, try width 800 px and quality 60.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var f2=new Intl.NumberFormat('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+  var f0=new Intl.NumberFormat('en-IN',{maximumFractionDigits:0});
+  var fx=new Intl.NumberFormat('en-IN',{maximumFractionDigits:2});
+  function inr(n){return '₹'+f2.format(n)}
+  function inr0(n){return '₹'+f0.format(Math.round(n))}
+  function num(s){var v=parseFloat(String(s).replace(/[^0-9.]/g,''));return isFinite(v)?v:0}
+  function r2(n){return Math.round((n+Number.EPSILON)*100)/100}
+  function trim(n){return String(parseFloat(n.toFixed(3)))}
+  function seg(id,cb){
+    var bs=$(id).querySelectorAll('button');
+    bs.forEach(function(b){b.addEventListener('click',function(){
+      bs.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});cb(b.dataset.v);
+    })});
+  }
+  function on(ids,fn){ids.forEach(function(i){$(i).addEventListener('input',fn)})}
+
+  /* ---------- tabs ---------- */
+  var names=['gst','emi','sip','age','percent','qr','image'];
+  function show(t){
+    if(names.indexOf(t)<0)t='gst';
+    names.forEach(function(n){$('t-'+n).hidden=n!==t});
+    document.querySelectorAll('.tab').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===t?'true':'false')});
+    try{history.replaceState(null,'','#'+t)}catch(e){}
+  }
+  document.querySelectorAll('.tab').forEach(function(b){b.addEventListener('click',function(){show(b.dataset.t)})});
+  window.addEventListener('hashchange',function(){show(location.hash.slice(1))});
+
+  /* ---------- GST ---------- */
+  var ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+  var tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  function two(n){return n<20?ones[n]:tens[Math.floor(n/10)]+(n%10?' '+ones[n%10]:'')}
+  function three(n){var h=Math.floor(n/100),r=n%100;return (h?ones[h]+' Hundred'+(r?' ':''):'')+(r?two(r):'')}
+  function words(n){
+    if(n===0)return 'Zero';
+    var out=[],cr=Math.floor(n/1e7);n%=1e7;
+    var lk=Math.floor(n/1e5);n%=1e5;
+    var th=Math.floor(n/1e3);n%=1e3;
+    if(cr)out.push(words(cr)+' Crore');
+    if(lk)out.push(two(lk)+' Lakh');
+    if(th)out.push(two(th)+' Thousand');
+    if(n)out.push(three(n));
+    return out.join(' ');
+  }
+  function inWords(v){
+    if(v>=1e14)return 'Amount too large to spell out';
+    var p=Math.round(v*100),ru=Math.floor(p/100),pa=p%100;
+    return 'Rupees '+words(ru)+(pa?' and '+two(pa)+' Paise':'')+' Only';
+  }
+  var g={mode:'ex',rate:18,inter:false},gl={};
+  function gst(){
+    var a=num($('g-amt').value),r=g.rate,base,tax,total;
+    if(g.mode==='ex'){base=r2(a);tax=r2(a*r/100);total=r2(base+tax)}
+    else{total=r2(a);base=r2(a/(1+r/100));tax=r2(total-base)}
+    var half=r2(tax/2);
+    $('g-tag').textContent='GST @ '+trim(r)+'%';
+    $('g-base').textContent=inr(base);$('g-gst').textContent=inr(tax);$('g-total').textContent=inr(total);
+    $('g-cgst').textContent=inr(half);$('g-sgst').textContent=inr(r2(tax-half));$('g-igst').textContent=inr(tax);
+    $('g-h1').textContent=$('g-h2').textContent='@ '+trim(r/2)+'%';$('g-fr').textContent='@ '+trim(r)+'%';
+    $('g-lc').hidden=$('g-ls').hidden=g.inter;$('g-li').hidden=!g.inter;
+    $('g-words').textContent=inWords(total);
+    gl={base:base,tax:tax,total:total,half:half,r:r};
+  }
+  on(['g-amt'],gst);
+  seg('g-mode',function(v){g.mode=v;gst()});
+  seg('g-sale',function(v){g.inter=v==='inter';gst()});
+  var chips=document.querySelectorAll('#g-rates .chip');
+  function setChip(el){chips.forEach(function(c){c.setAttribute('aria-pressed',c===el?'true':'false')})}
+  chips.forEach(function(c){c.addEventListener('click',function(){g.rate=parseFloat(c.dataset.r);$('g-custom').value='';setChip(c);gst()})});
+  $('g-custom').addEventListener('input',function(){
+    if(this.value.trim()==='')return;
+    g.rate=Math.min(num(this.value),100);setChip(null);gst();
+  });
+  $('g-copy').addEventListener('click',function(){
+    var b=this,L=gl,t='Taxable value: '+inr(L.base)+'\n'+
+      (g.inter?'IGST @ '+trim(L.r)+'%: '+inr(L.tax):'CGST @ '+trim(L.r/2)+'%: '+inr(L.half)+'\nSGST @ '+trim(L.r/2)+'%: '+inr(r2(L.tax-L.half)))+
+      '\nTotal GST: '+inr(L.tax)+'\nInvoice total: '+inr(L.total);
+    var done=function(m){b.textContent=m;setTimeout(function(){b.textContent='Copy break-up'},1500)};
+    var old=function(){
+      var ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');
+      ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+      var ok=false;try{ok=document.execCommand('copy')}catch(e){}
+      document.body.removeChild(ta);done(ok?'Copied':'Could not copy');
+    };
+    try{navigator.clipboard.writeText(t).then(function(){done('Copied')},old)}catch(e){old()}
+  });
+
+  /* ---------- EMI ---------- */
+  var eu='y';
+  function bar(id,lp,li,a,b,la,lb){
+    var t=a+b,p=t>0?a/t*100:0;
+    $(id).style.width=p.toFixed(1)+'%';
+    $(lp).textContent=la+' '+(t>0?Math.round(p):0)+'%';
+    $(li).textContent=lb+' '+(t>0?100-Math.round(p):0)+'%';
+  }
+  function emi(){
+    var P=num($('e-p').value),R=Math.min(num($('e-r').value),100),t=num($('e-n').value);
+    var n=Math.min(Math.round(eu==='y'?t*12:t),1200),r=R/1200,e=0;
+    if(P>0&&n>0){if(r===0)e=P/n;else{var k=Math.pow(1+r,n);e=P*r*k/(k-1)}}
+    var total=Math.round(e*n),intr=Math.max(total-Math.round(P),0);
+    $('e-tag').textContent=n+' months @ '+trim(R)+'%';
+    $('e-emi').textContent=inr0(e);$('e-prin').textContent=inr0(n>0?P:0);
+    $('e-int').textContent=inr0(n>0?intr:0);$('e-total').textContent=inr0(total);
+    bar('e-bar','e-lp','e-li',n>0?P:0,n>0?intr:0,'Principal','Interest');
+  }
+  on(['e-p','e-r','e-n'],emi);seg('e-unit',function(v){eu=v;emi()});
+
+  /* ---------- SIP ---------- */
+  function sip(){
+    var P=num($('s-amt').value),R=Math.min(num($('s-r').value),100),y=Math.min(num($('s-y').value),100);
+    var n=Math.round(y*12),i=R/1200,inv=P*n,val=i===0?inv:P*(Math.pow(1+i,n)-1)/i*(1+i);
+    $('s-tag').textContent=n+' months @ '+trim(R)+'%';
+    $('s-val').textContent=inr0(val);$('s-inv').textContent=inr0(inv);$('s-gain').textContent=inr0(Math.round(val)-Math.round(inv));
+    bar('s-bar','s-lp','s-li',inv,Math.max(val-inv,0),'Invested','Gain');
+  }
+  on(['s-amt','s-r','s-y'],sip);
+
+  /* ---------- AGE ---------- */
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  function pd(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s);return m?new Date(Date.UTC(+m[1],+m[2]-1,+m[3])):null}
+  function pl(n,w){return n+' '+w+(n===1?'':'s')}
+  function age(){
+    var a=pd($('a-dob').value),b=pd($('a-on').value),ids=['a-months','a-weeks','a-days','a-born','a-next'];
+    if(!a||!b||a>b){
+      $('a-age').textContent=(!a||!b)?'Pick both dates':'Date of birth is after the other date';
+      ids.forEach(function(i){$(i).textContent='–'});$('a-tag').textContent='';return;
+    }
+    var tm=(b.getUTCFullYear()-a.getUTCFullYear())*12+(b.getUTCMonth()-a.getUTCMonth());
+    if(b.getUTCDate()<a.getUTCDate())tm--;
+    var ay=a.getUTCFullYear()+Math.floor((a.getUTCMonth()+tm)/12),am=(a.getUTCMonth()+tm)%12;
+    var dim=new Date(Date.UTC(ay,am+1,0)).getUTCDate();
+    var anchor=new Date(Date.UTC(ay,am,Math.min(a.getUTCDate(),dim)));
+    var y=Math.floor(tm/12),m=tm%12,d=Math.round((b-anchor)/864e5);
+    var td=Math.round((b-a)/864e5);
+    $('a-age').textContent=pl(y,'year')+', '+pl(m,'month')+', '+pl(d,'day');
+    $('a-tag').textContent='as on '+b.getUTCDate()+'/'+(b.getUTCMonth()+1)+'/'+b.getUTCFullYear();
+    $('a-months').textContent=f0.format(y*12+m);
+    $('a-weeks').textContent=f0.format(Math.floor(td/7));
+    $('a-days').textContent=f0.format(td);
+    $('a-born').textContent=days[a.getUTCDay()];
+    var nb=new Date(Date.UTC(b.getUTCFullYear(),a.getUTCMonth(),a.getUTCDate()));
+    if(nb<b)nb=new Date(Date.UTC(b.getUTCFullYear()+1,a.getUTCMonth(),a.getUTCDate()));
+    var left=Math.round((nb-b)/864e5);
+    $('a-next').textContent=left===0?'Today':'in '+pl(left,'day')+' ('+days[nb.getUTCDay()]+')';
+  }
+  (function(){var t=new Date(),z=function(n){return (n<10?'0':'')+n};
+    $('a-on').value=t.getFullYear()+'-'+z(t.getMonth()+1)+'-'+z(t.getDate())})();
+  on(['a-dob','a-on'],age);
+  $('a-dob').addEventListener('change',age);$('a-on').addEventListener('change',age);
+
+  /* ---------- PERCENT ---------- */
+  function pct(){
+    var a=num($('p1a').value),b=num($('p1b').value);$('p1o').textContent='= '+fx.format(r2(b*a/100));
+    a=num($('p2a').value);b=num($('p2b').value);$('p2o').textContent=b===0?'Enter a number other than 0':'= '+fx.format(r2(a/b*100))+'%';
+    a=num($('p3a').value);b=Math.min(num($('p3b').value),100);var s=r2(a*b/100);
+    $('p3o').textContent='You pay '+inr(r2(a-s))+', you save '+inr(s);
+    a=num($('p4a').value);b=num($('p4b').value);
+    if(a===0)$('p4o').textContent='Enter a starting number other than 0';
+    else{var c=r2((b-a)/a*100);$('p4o').textContent=c===0?'No change':'= '+fx.format(Math.abs(c))+'% '+(c>0?'increase':'decrease')}
+  }
+  on(['p1a','p1b','p2a','p2b','p3a','p3b','p4a','p4b'],pct);
+
+  /* ---------- QR ---------- */
+  /* QR encoder: byte mode, error correction level M, versions 1 to 40 */
+  var QE=[0,10,16,26,18,24,16,18,22,22,26,30,22,22,24,24,28,28,26,26,26,26,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28];
+  var QB=[0,1,1,1,2,2,4,4,4,5,5,5,8,9,9,10,10,11,13,14,16,17,17,18,20,21,23,25,26,28,29,31,33,35,37,38,40,43,45,47,49];
+  function qRaw(v){var r=(16*v+128)*v+64;if(v>=2){var a=Math.floor(v/7)+2;r-=(25*a-10)*a-55;if(v>=7)r-=36}return r}
+  function qMul(x,y){var z=0;for(var i=7;i>=0;i--){z=(z<<1)^((z>>>7)*0x11D);z^=((y>>>i)&1)*x}return z}
+  function qDiv(d){var r=[],i,j,root=1;for(i=0;i<d-1;i++)r.push(0);r.push(1);
+    for(i=0;i<d;i++){for(j=0;j<r.length;j++){r[j]=qMul(r[j],root);if(j+1<r.length)r[j]^=r[j+1]}root=qMul(root,2)}return r}
+  function qRem(data,div){var r=div.map(function(){return 0});
+    data.forEach(function(b){var f=b^r.shift();r.push(0);div.forEach(function(c,i){r[i]^=qMul(c,f)})});return r}
+  function qrMake(text){
+    var bytes=Array.prototype.slice.call(new TextEncoder().encode(text)),v,cap,cc;
+    for(v=1;v<=40;v++){cap=(Math.floor(qRaw(v)/8)-QE[v]*QB[v])*8;cc=v<10?8:16;if(4+cc+bytes.length*8<=cap)break}
+    if(v>40)throw new Error('too long');
+    var bits=[],push=function(val,len){for(var i=len-1;i>=0;i--)bits.push((val>>>i)&1)};
+    push(4,4);push(bytes.length,cc);bytes.forEach(function(b){push(b,8)});
+    push(0,Math.min(4,cap-bits.length));push(0,(8-bits.length%8)%8);
+    for(var pad=0xEC;bits.length<cap;pad^=0xEC^0x11)push(pad,8);
+    var data=[],i,j;for(i=0;i<bits.length;i+=8){var b=0;for(j=0;j<8;j++)b=(b<<1)|bits[i+j];data.push(b)}
+    var nb=QB[v],el=QE[v],raw=Math.floor(qRaw(v)/8),ns=nb-raw%nb,sl=Math.floor(raw/nb),blocks=[],div=qDiv(el),k=0;
+    for(i=0;i<nb;i++){var dat=data.slice(k,k+sl-el+(i<ns?0:1));k+=dat.length;var ecc=qRem(dat,div);if(i<ns)dat.push(0);blocks.push(dat.concat(ecc))}
+    var cw=[];for(i=0;i<blocks[0].length;i++)blocks.forEach(function(bl,j){if(i!==sl-el||j>=ns)cw.push(bl[i])});
+    var n=v*4+17,m=[],fn=[],x,y;
+    for(y=0;y<n;y++){m.push([]);fn.push([]);for(x=0;x<n;x++){m[y].push(false);fn[y].push(false)}}
+    function set(x,y,d){m[y][x]=d;fn[y][x]=true}
+    for(i=0;i<n;i++){set(6,i,i%2===0);set(i,6,i%2===0)}
+    function finder(cx,cy){for(var dy=-4;dy<=4;dy++)for(var dx=-4;dx<=4;dx++){var d=Math.max(Math.abs(dx),Math.abs(dy)),xx=cx+dx,yy=cy+dy;
+      if(xx>=0&&xx<n&&yy>=0&&yy<n)set(xx,yy,d!==2&&d!==4)}}
+    finder(3,3);finder(n-4,3);finder(3,n-4);
+    var ap=[];if(v>1){var na=Math.floor(v/7)+2,step=v===32?26:Math.ceil((v*4+4)/(na*2-2))*2;ap=[6];for(var pos=n-7;ap.length<na;pos-=step)ap.splice(1,0,pos)}
+    ap.forEach(function(ax,i){ap.forEach(function(ay,j){
+      if((i===0&&j===0)||(i===0&&j===ap.length-1)||(i===ap.length-1&&j===0))return;
+      for(var dy=-2;dy<=2;dy++)for(var dx=-2;dx<=2;dx++)set(ax+dx,ay+dy,Math.max(Math.abs(dx),Math.abs(dy))!==1)})});
+    function fmt(mask){var d=mask,rem=d,i;for(i=0;i<10;i++)rem=(rem<<1)^((rem>>>9)*0x537);var b=((d<<10)|rem)^0x5412,g=function(i){return ((b>>>i)&1)!==0};
+      for(i=0;i<=5;i++)set(8,i,g(i));set(8,7,g(6));set(8,8,g(7));set(7,8,g(8));for(i=9;i<15;i++)set(14-i,8,g(i));
+      for(i=0;i<8;i++)set(n-1-i,8,g(i));for(i=8;i<15;i++)set(8,n-15+i,g(i));set(8,n-8,true)}
+    fmt(0);
+    if(v>=7){var rem=v;for(i=0;i<12;i++)rem=(rem<<1)^((rem>>>11)*0x1F25);var vb=(v<<12)|rem;
+      for(i=0;i<18;i++){var bt=((vb>>>i)&1)!==0,a=n-11+i%3,c=Math.floor(i/3);set(a,c,bt);set(c,a,bt)}}
+    i=0;for(var right=n-1;right>=1;right-=2){if(right===6)right=5;
+      for(var vert=0;vert<n;vert++)for(j=0;j<2;j++){x=right-j;var up=((right+1)&2)===0;y=up?n-1-vert:vert;
+        if(!fn[y][x]&&i<cw.length*8){m[y][x]=((cw[i>>>3]>>>(7-(i&7)))&1)!==0;i++}}}
+    function mk(k,x,y){switch(k){case 0:return (x+y)%2===0;case 1:return y%2===0;case 2:return x%3===0;case 3:return (x+y)%3===0;
+      case 4:return (Math.floor(x/3)+Math.floor(y/2))%2===0;case 5:return x*y%2+x*y%3===0;case 6:return (x*y%2+x*y%3)%2===0;default:return ((x+y)%2+x*y%3)%2===0}}
+    function apply(k){for(var y=0;y<n;y++)for(var x=0;x<n;x++)if(!fn[y][x]&&mk(k,x,y))m[y][x]=!m[y][x]}
+    function pen(){var p=0,x,y,run,dark=0;
+      for(y=0;y<n;y++){run=1;for(x=1;x<n;x++){if(m[y][x]===m[y][x-1]){run++;if(run===5)p+=3;else if(run>5)p++}else run=1}}
+      for(x=0;x<n;x++){run=1;for(y=1;y<n;y++){if(m[y][x]===m[y-1][x]){run++;if(run===5)p+=3;else if(run>5)p++}else run=1}}
+      for(y=0;y<n-1;y++)for(x=0;x<n-1;x++){var c=m[y][x];if(c===m[y][x+1]&&c===m[y+1][x]&&c===m[y+1][x+1])p+=3}
+      for(y=0;y<n;y++)for(x=0;x<n;x++)if(m[y][x])dark++;
+      return p+Math.floor(Math.abs(dark*20-n*n*10)/(n*n))*10}
+    var best=0,bp=Infinity;
+    for(var k2=0;k2<8;k2++){apply(k2);fmt(k2);var pp=pen();if(pp<bp){bp=pp;best=k2}apply(k2)}
+    apply(best);fmt(best);
+    return {n:n,m:m,v:v};
+  }
+  var qm='upi';
+  function qr(){
+    var data,err='';
+    if(qm==='upi'){
+      var id=$('q-upi').value.trim(),nm=$('q-name').value.trim(),am=num($('q-amt').value),nt=$('q-note').value.trim();
+      if(!/^[A-Za-z0-9._-]{2,}@[A-Za-z0-9]{2,}$/.test(id))err='Enter a valid UPI ID, like name@bank.';
+      data='upi://pay?pa='+encodeURIComponent(id).replace(/%40/g,'@')+(nm?'&pn='+encodeURIComponent(nm):'')+(am>0?'&am='+am.toFixed(2):'')+'&cu=INR'+(nt?'&tn='+encodeURIComponent(nt):'');
+      $('q-tag').textContent=am>0?'UPI · '+inr(am):'UPI · any amount';
+    }else{
+      data=$('q-text').value.trim();if(!data)err='Type a link or some text.';
+      $('q-tag').textContent=data.length+' characters';
+    }
+    if(!err){
+      try{
+        var q=qrMake(data);
+        var n=q.n,s=8,m=4,c=document.createElement('canvas');c.width=c.height=(n+m*2)*s;
+        var x=c.getContext('2d');x.fillStyle='#ffffff';x.fillRect(0,0,c.width,c.height);x.fillStyle='#000000';
+        for(var r=0;r<n;r++)for(var k=0;k<n;k++)if(q.m[r][k])x.fillRect((k+m)*s,(r+m)*s,s,s);
+        var u=c.toDataURL('image/png');$('q-img').src=u;$('q-dl').href=u;
+      }catch(e){err='That is too long for one QR code. Shorten it.'}
+    }
+    $('q-img').hidden=$('q-dl').hidden=!!err;$('q-msg').hidden=!err;$('q-msg').textContent=err;
+    $('q-data').textContent=err?'':data;
+  }
+  on(['q-upi','q-name','q-amt','q-note','q-text'],qr);
+  seg('q-mode',function(v){qm=v;$('q-upi-f').hidden=v!=='upi';$('q-text-f').hidden=v!=='text';qr()});
+
+  /* ---------- IMAGE ---------- */
+  var src=null,srcSize=0,outUrl=null;
+  function kb(b){return b>=1048576?(b/1048576).toFixed(2)+' MB':(b/1024).toFixed(1)+' KB'}
+  function imgErr(m){$('i-msg').textContent=m;$('i-msg').hidden=false;$('i-res').hidden=true;$('i-empty').hidden=false}
+  function compress(){
+    $('i-qv').textContent=$('i-q').value+'%';
+    if(!src)return;
+    var mw=+$('i-w').value||src.naturalWidth,sc=Math.min(1,mw/src.naturalWidth);
+    var w=Math.max(1,Math.round(src.naturalWidth*sc)),h=Math.max(1,Math.round(src.naturalHeight*sc));
+    var c=document.createElement('canvas');c.width=w;c.height=h;
+    var x=c.getContext('2d');x.fillStyle='#ffffff';x.fillRect(0,0,w,h);x.drawImage(src,0,0,w,h);
+    c.toBlob(function(b){
+      if(!b){imgErr('This photo could not be compressed. Try a smaller width.');return}
+      if(outUrl)URL.revokeObjectURL(outUrl);outUrl=URL.createObjectURL(b);
+      $('i-img').src=outUrl;$('i-dl').href=outUrl;$('i-orig').textContent=kb(srcSize);$('i-new').textContent=kb(b.size);
+      $('i-dim').textContent=w+' × '+h;
+      var p=Math.round((1-b.size/srcSize)*100);
+      $('i-save').textContent=p>0?p+'%':'Not smaller. Lower the quality or width.';
+      $('i-msg').hidden=true;$('i-empty').hidden=true;$('i-res').hidden=false;
+    },'image/jpeg',+$('i-q').value/100);
+  }
+  $('i-file').addEventListener('change',function(){
+    var f=this.files&&this.files[0];if(!f)return;
+    if(!/^image\//.test(f.type)){imgErr('That file is not a photo. Choose a JPG, PNG or WebP.');return}
+    var rd=new FileReader();
+    rd.onload=function(){var im=new Image();
+      im.onload=function(){src=im;srcSize=f.size;compress()};
+      im.onerror=function(){src=null;imgErr('This photo could not be opened. Try a JPG or PNG.')};
+      im.src=rd.result};
+    rd.onerror=function(){imgErr('This photo could not be read.')};
+    rd.readAsDataURL(f);
+  });
+  $('i-q').addEventListener('input',compress);$('i-w').addEventListener('change',compress);
+
+  gst();emi();sip();age();pct();qr();compress();
+  show(location.hash.slice(1));
+})();
+</script>
+</body>
+</html>
